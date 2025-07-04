@@ -1,0 +1,35 @@
+version: "3.8"
+
+services:
+  mysql:
+    image: mysql:5.5
+    restart: always
+    container_name: formulario-mysql
+    volumes:
+      - ./data:/var/lib/mysql
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_DATABASE: "formulario-usuarios"
+      MYSQL_USER: "leadsoft"
+      MYSQL_PASSWORD: "leadsoft"
+      MYSQL_ROOT_PASSWORD: "root_leadsoft"
+
+  php:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: formulario
+    extra_hosts:
+      #- "host.docker.internal:host-gateway"
+      - "docker.for.mac.host.internal:host-gateway"
+    ports:
+      - "9091:80"
+    restart: always
+    volumes:
+      - ./:/var/www/html
+      - ./php.ini:/usr/local/etc/php/conf.d/php.ini
+    links:
+      - mysql
+    depends_on:
+      - mysql

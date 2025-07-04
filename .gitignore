@@ -21,3 +21,54 @@ yarn-error.log
 /.nova
 /.vscode
 /.zed
+
+# Laravel specific
+/bootstrap/cache/*
+/storage/framework/cache/*
+/storage/framework/sessions/*
+/storage/framework/views/*
+/storage/logs/*
+/storage/app/public/*
+/storage/app/private/*
+/storage/app/*.key
+
+# Database
+/data/
+*.sqlite
+*.sqlite3
+
+# Dependencies
+package-lock.json
+yarn.lock
+
+# Build files
+/public/build/
+/public/hot/
+
+# IDE and editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Docker
+.dockerignore
+
+# Temporary files
+*.tmp
+*.temp
+*.log
+
+# Cache files
+.phpunit.cache/
+.phpunit.result.cache

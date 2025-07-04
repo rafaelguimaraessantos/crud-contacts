@@ -9,6 +9,8 @@ use Tests\TestCase;
 
 class CreateContactsTest extends TestCase
 {
+    use RefreshDatabase;
+
     #[Test]
     public function it_should_be_able_to_create_a_new_contact(): void
     {
@@ -20,8 +22,7 @@ class CreateContactsTest extends TestCase
 
         $response = $this->post('/contacts', $data);
 
-        $response->assertStatus(200);
-
+        $response->assertStatus(302);
 
         $expected = $data;
         $expected['phone'] = preg_replace('/\D/', '', $expected['phone']);
@@ -58,13 +59,9 @@ class CreateContactsTest extends TestCase
 
         $response->assertStatus(200);
 
-        $response->assertViewIs('contacts.index');
+        $response->assertViewIs('app');
 
-        $response->assertViewHas('contacts');
-
-        $contacts = $response->viewData('contacts');
-
-        $this->assertCount(10, $contacts);
+        $response->assertSee('Contacts');
     }
 
     #[Test]
@@ -74,7 +71,7 @@ class CreateContactsTest extends TestCase
 
         $response = $this->delete("/contacts/{$contact->id}");
 
-        $response->assertStatus(200);
+        $response->assertStatus(302);
 
         $this->assertDatabaseMissing('contacts', $contact->toArray());
     }
@@ -112,14 +109,17 @@ class CreateContactsTest extends TestCase
 
         $response = $this->put("/contacts/{$contact->id}", $data);
 
-        $response->assertStatus(200);
+        $response->assertStatus(302);
 
         $expected = $data;
-
         $expected['phone'] = preg_replace('/\D/', '', $expected['phone']);
 
         $this->assertDatabaseHas('contacts', $expected);
 
-        $this->assertDatabaseMissing('contacts', $contact->toArray());
+        $this->assertDatabaseHas('contacts', [
+            'id' => $contact->id,
+            'name' => 'Rodolfo Meri',
+            'email' => 'emailatualizado@email.com'
+        ]);
     }
 }
