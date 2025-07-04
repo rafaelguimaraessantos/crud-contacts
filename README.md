@@ -72,19 +72,72 @@ app/
 ## 🛠️ Instalação
 
 ### Pré-requisitos
+- **Docker** e **Docker Compose** instalados
+- Git
+
+### 🐳 Método Recomendado: Docker
+
+#### 1. Clone o repositório
+```bash
+git clone https://github.com/rafaelguimaraessantos/crud-contacts.git
+cd crud-contacts
+```
+
+#### 2. Configure o ambiente
+```bash
+cp .env.example .env
+```
+
+#### 3. Inicie os containers
+```bash
+docker-compose up -d
+```
+
+#### 4. Instale as dependências do PHP
+```bash
+docker-compose exec app composer install
+```
+
+#### 5. Gere a chave da aplicação
+```bash
+docker-compose exec app php artisan key:generate
+```
+
+#### 6. Execute as migrations e seeders
+```bash
+docker-compose exec app php artisan migrate:fresh --seed
+```
+
+#### 7. Instale as dependências do Node.js
+```bash
+docker-compose exec app npm install
+```
+
+#### 8. Compile os assets
+```bash
+docker-compose exec app npm run dev
+```
+
+#### 9. Acesse a aplicação
+- **Frontend**: http://localhost:8000
+- **MySQL**: localhost:3306
+- **phpMyAdmin**: http://localhost:8080
+
+### 🔧 Método Alternativo: Instalação Local
+
+#### Pré-requisitos
 - PHP 8.2+
 - Composer
 - MySQL 8.0+
 - Node.js 18+
-- Docker (opcional)
 
-### 1. Clone o repositório
+#### 1. Clone o repositório
 ```bash
-git clone <repository-url>
-cd contact-management-system
+git clone https://github.com/rafaelguimaraessantos/crud-contacts.git
+cd crud-contacts
 ```
 
-### 2. Instale as dependências
+#### 2. Instale as dependências
 ```bash
 # Backend
 composer install
@@ -93,13 +146,13 @@ composer install
 npm install
 ```
 
-### 3. Configure o ambiente
+#### 3. Configure o ambiente
 ```bash
 cp .env.example .env
 php artisan key:generate
 ```
 
-### 4. Configure o banco de dados
+#### 4. Configure o banco de dados
 ```bash
 # Edite o arquivo .env com suas configurações
 DB_CONNECTION=mysql
@@ -110,12 +163,12 @@ DB_USERNAME=root
 DB_PASSWORD=
 ```
 
-### 5. Execute as migrations e seeders
+#### 5. Execute as migrations e seeders
 ```bash
 php artisan migrate:fresh --seed
 ```
 
-### 6. Configure o email (opcional)
+#### 6. Configure o email (opcional)
 ```bash
 # Para desenvolvimento (logs)
 MAIL_MAILER=log
@@ -129,42 +182,81 @@ MAIL_PASSWORD=sua-senha-app
 MAIL_ENCRYPTION=tls
 ```
 
-### 7. Compile os assets
+#### 7. Compile os assets
 ```bash
 npm run dev
 ```
 
-### 8. Inicie o servidor
+#### 8. Inicie o servidor
 ```bash
 php artisan serve
 ```
 
-## 🐳 Docker (Opcional)
+## 🐳 Comandos Docker Úteis
 
-### Usando Docker Compose
+### Gerenciar containers
 ```bash
+# Iniciar containers
 docker-compose up -d
+
+# Parar containers
+docker-compose down
+
+# Ver logs
+docker-compose logs -f
+
+# Reiniciar containers
+docker-compose restart
 ```
 
-### Acesse a aplicação
-- **Frontend**: http://localhost:8000
-- **MySQL**: localhost:3306
-- **phpMyAdmin**: http://localhost:8080
+### Executar comandos no container
+```bash
+# Acessar o container
+docker-compose exec app bash
+
+# Executar artisan
+docker-compose exec app php artisan migrate
+
+# Executar testes
+docker-compose exec app php artisan test
+
+# Instalar dependências
+docker-compose exec app composer install
+docker-compose exec app npm install
+```
+
+### Rebuild do container
+```bash
+# Rebuild após mudanças no Dockerfile
+docker-compose up -d --build
+```
 
 ## 🧪 Testes
 
 ### Executar todos os testes
 ```bash
+# Com Docker
+docker-compose exec app php artisan test
+
+# Local
 php artisan test
 ```
 
 ### Executar apenas testes de feature
 ```bash
+# Com Docker
+docker-compose exec app php artisan test --testsuite=Feature
+
+# Local
 php artisan test --testsuite=Feature
 ```
 
 ### Executar testes específicos
 ```bash
+# Com Docker
+docker-compose exec app php artisan test --filter=CreateContactsTest
+
+# Local
 php artisan test --filter=CreateContactsTest
 ```
 
@@ -236,18 +328,18 @@ public function paginate(int $perPage = 10)
 │   └── views/                    # Views Blade
 ├── routes/
 │   └── web.php                   # Rotas
-└── tests/
-    └── Feature/                  # Testes de feature
+├── tests/
+│   └── Feature/                  # Testes de feature
+├── Dockerfile                    # Configuração Docker
+└── docker-compose.yml            # Orquestração Docker
 ```
 
 ## 🚀 Deploy
 
-### Produção
-1. Configure as variáveis de ambiente
-2. Execute `composer install --optimize-autoloader --no-dev`
-3. Execute `npm run build`
-4. Configure o servidor web (Apache/Nginx)
-5. Configure o supervisor para filas (opcional)
+### Produção com Docker
+1. Configure as variáveis de ambiente no `.env`
+2. Execute `docker-compose -f docker-compose.prod.yml up -d`
+3. Configure o servidor web (Apache/Nginx) como proxy reverso
 
 ### Variáveis de Ambiente de Produção
 ```env
@@ -284,10 +376,8 @@ Este projeto está sob a licença MIT. Veja o arquivo [LICENSE](LICENSE) para ma
 
 ## 👨‍💻 Autor
 
-**Seu Nome**
-- Email: seu-email@exemplo.com
-- LinkedIn: [Seu LinkedIn](https://linkedin.com/in/seu-perfil)
-- GitHub: [Seu GitHub](https://github.com/seu-usuario)
+**Rafael Guimarães Santos**
+- GitHub: [rafaelguimaraessantos](https://github.com/rafaelguimaraessantos)
 
 ## 🙏 Agradecimentos
 
